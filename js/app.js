@@ -1252,8 +1252,8 @@ if(_l5Reset){
 const LETTER_SIGN = 'Forever & a day,\nyours ♥';
 
 const GALLERY = [
-  { src: 'assets/images/memories/memory-1.JPG',  caption: 'where it all began ✿' },
-  { src: 'assets/images/memories/memory-2.JPG',  caption: 'MY ♥ pic' },
+  { src: 'assets/images/memories/memory-1.jpg',  caption: 'where it all began ✿' },
+  { src: 'assets/images/memories/memory-2.jpg',  caption: 'MY ♥ pic' },
   { src: 'assets/images/memories/memory-3.jpeg', caption: 'wind stay with u' },
   { src: 'assets/images/memories/memory-4.jpeg', caption: 'sun kiss' },
   { src: 'assets/images/memories/memory-5.jpeg', caption: 'My name start with M' },
