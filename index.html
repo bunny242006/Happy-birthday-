@@ -2,8 +2,12 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<title>Love Quest ✦ For You</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="theme-color" content="#2d1b1b" />
+<title>MY friend ✦ For You</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@300;400;500;600;700&family=Caveat:wght@500;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Dancing+Script:wght@500;600;700&display=swap" rel="stylesheet">
@@ -30,15 +34,32 @@
   </svg>
 </button>
 
+<!-- ========== SCREEN: PASSWORD ========== -->
+<section class="screen active" id="screen-password">
+  <div class="screen-bg" style="background-image:url('assets/images/backgrounds/red_rose.jpg')"></div>
+  <div class="screen-overlay dark"></div>
+
+  <div class="name-wrap">
+    <p class="kicker">Restricted Access</p>
+    <h2 class="display-md">Enter Password</h2>
+    <div class="input-row glass">
+      <input type="password" id="entryPassword" placeholder="password..." autocomplete="off"/>
+      <button class="cta" id="btnPasswordSubmit">Unlock</button>
+    </div>
+    <p class="error-msg" id="passwordError"></p>
+    <p class="micro">only for you ✿</p>
+  </div>
+</section>
+
 <!-- ========== SCREEN: INTRO ========== -->
-<section class="screen active" id="screen-intro">
-  <div class="screen-bg" style="background-image:url('https://images.unsplash.com/photo-1518621736915-f3b1c41bfd00?auto=format&fit=crop&w=1920&q=80')"></div>
+<section class="screen" id="screen-intro">
+  <div class="screen-bg" style="background-image:url('assets/images/backgrounds/red_rose.jpg')"></div>
   <div class="screen-overlay"></div>
 
   <div class="intro-wrap">
     <p class="kicker">Made with ♥ for you</p>
-    <h1 class="display">Love<br/><em>Quest</em></h1>
-    <p class="lede">Five little games. One big surprise.<br/>Will you play?</p>
+    <h1 class="display">Happy Birthday<br/><em>Manasa</em></h1>
+    <p class="lede">Four little games. One big birthday surprise.<br/>Will you play?</p>
     <button class="cta" id="btnIntroStart">
       <span>Begin →</span>
     </button>
@@ -48,11 +69,11 @@
 
 <!-- ========== SCREEN: NAME ========== -->
 <section class="screen" id="screen-name">
-  <div class="screen-bg" style="background-image:url('https://images.unsplash.com/photo-1518621736915-f3b1c41bfd00?auto=format&fit=crop&w=1920&q=80&sat=-20')"></div>
+  <div class="screen-bg" style="background-image:url('assets/images/backgrounds/white_lily.jpg')"></div>
   <div class="screen-overlay"></div>
 
   <div class="name-wrap">
-    <p class="kicker">First, my love...</p>
+    <p class="kicker">First, my friend...</p>
     <h2 class="display-md">What should I call you?</h2>
     <div class="input-row">
       <input type="text" id="userName" placeholder="your name..." maxlength="20" autocomplete="off"/>
@@ -141,33 +162,25 @@
       <span class="stone-label">Word Whisper</span>
     </button>
 
-    <button class="stone locked" data-level="2" style="--x:28%;--y:53%">
+    <button class="stone locked" data-level="2" style="--x:40%;--y:53%">
       <span class="stone-inner">
         <span class="stone-num">2</span>
-        <span class="stone-glow"></span>
-      </span>
-      <span class="stone-label">Memory Match</span>
-    </button>
-
-    <button class="stone locked" data-level="3" style="--x:50%;--y:37%">
-      <span class="stone-inner">
-        <span class="stone-num">3</span>
         <span class="stone-glow"></span>
       </span>
       <span class="stone-label">Photo Puzzle</span>
     </button>
 
-    <button class="stone locked" data-level="4" style="--x:72%;--y:47%">
+    <button class="stone locked" data-level="3" style="--x:65%;--y:37%">
       <span class="stone-inner">
-        <span class="stone-num">4</span>
+        <span class="stone-num">3</span>
         <span class="stone-glow"></span>
       </span>
       <span class="stone-label">Heart Rain</span>
     </button>
 
-    <button class="stone locked" data-level="5" style="--x:90%;--y:20%">
+    <button class="stone locked" data-level="4" style="--x:85%;--y:20%">
       <span class="stone-inner">
-        <span class="stone-num">5</span>
+        <span class="stone-num">4</span>
         <span class="stone-glow"></span>
       </span>
       <span class="stone-label">Final Quest</span>
@@ -176,7 +189,7 @@
 
   <div class="map-footer">
     <div class="progress-display">
-      <span id="progressCount">0</span>/5 levels complete
+      <span id="progressCount">0</span>/4 levels complete
     </div>
     <button class="cta-ghost" id="btnSurprise" disabled>Open Surprise ✨</button>
   </div>
@@ -184,7 +197,7 @@
 
 <!-- ========== LEVEL 1: WORD WHISPER ========== -->
 <section class="screen" id="screen-l1">
-  <div class="screen-bg" style="background-image:url('https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=1920&q=80')"></div>
+  <div class="screen-bg" style="background-image:url('assets/images/backgrounds/chocolates.jpg')"></div>
   <div class="screen-overlay"></div>
 
   <div class="level-wrap">
@@ -204,35 +217,13 @@
   </div>
 </section>
 
-<!-- ========== LEVEL 2: MEMORY MATCH ========== -->
+<!-- ========== LEVEL 2: PHOTO PUZZLE ========== -->
 <section class="screen" id="screen-l2">
-  <div class="screen-bg" style="background-image:url('https://images.unsplash.com/photo-1494774157365-9e04c6720e47?auto=format&fit=crop&w=1920&q=80')"></div>
+  <div class="screen-bg" style="background-image:url('assets/images/backgrounds/tulips.jpg')"></div>
   <div class="screen-overlay"></div>
 
   <div class="level-wrap wide">
-    <p class="kicker">Level 2 · Memory Match</p>
-    <h2 class="display-md">Find every pair</h2>
-    <p class="lede">flip the cards · match the symbols of us</p>
-
-    <div class="hud">
-      <div class="hud-pill">⏱ <span id="l2Time">0:00</span></div>
-      <div class="hud-pill">moves <span id="l2Moves">0</span></div>
-      <div class="hud-pill">pairs <span id="l2Pairs">0</span>/8</div>
-    </div>
-
-    <div class="memory-grid" id="memoryGrid"></div>
-
-    <button class="back-link" data-back="screen-map">← back to map</button>
-  </div>
-</section>
-
-<!-- ========== LEVEL 3: PHOTO PUZZLE ========== -->
-<section class="screen" id="screen-l3">
-  <div class="screen-bg" style="background-image:url('https://images.unsplash.com/photo-1518621012420-8ab10887ed2a?auto=format&fit=crop&w=1920&q=80')"></div>
-  <div class="screen-overlay"></div>
-
-  <div class="level-wrap wide">
-    <p class="kicker">Level 3 · Photo Puzzle</p>
+    <p class="kicker">Level 2· Photo Puzzle</p>
     <h2 class="display-md">Piece us back together</h2>
     <p class="lede">drag each piece into place ✿ they snap when close</p>
 
@@ -248,7 +239,7 @@
       <div class="puzzle-preview-side">
         <p class="preview-label">target ↓</p>
         <div class="preview-frame">
-          <img id="puzzlePreviewImg" src="assets/images/puzzle/puzzle.png" alt="target"/>
+          <img id="puzzlePreviewImg" src="assets/images/puzzle/puzzle.jpg" alt="target"/>
         </div>
       </div>
     </div>
@@ -257,14 +248,14 @@
   </div>
 </section>
 
-<!-- ========== LEVEL 4: HEART RAIN ========== -->
-<section class="screen" id="screen-l4">
-  <div class="screen-bg" style="background-image:url('https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=1920&q=80')"></div>
+<!-- ========== LEVEL 3: HEART RAIN ========== -->
+<section class="screen" id="screen-l3">
+  <div class="screen-bg" style="background-image:url('assets/images/backgrounds/chocolate_cake.jpg')"></div>
   <div class="screen-overlay"></div>
 
   <div class="level-wrap">
-    <p class="kicker">Level 4 · Heart Rain</p>
-    <h2 class="display-md">Catch enough love<br/>to fill my heart</h2>
+    <p class="kicker">Level 3 · Heart Rain</p>
+    <h2 class="display-md">Catch enough love<br/>to fill your heart with joy</h2>
 
     <!-- Big heart with progress fill -->
     <div class="big-heart-tracker">
@@ -301,13 +292,13 @@
   </div>
 </section>
 
-<!-- ========== LEVEL 5: CONSTELLATION OF LOVE ========== -->
-<section class="screen" id="screen-l5">
-  <div class="screen-bg" style="background-image:url('https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?auto=format&fit=crop&w=1920&q=80')"></div>
+<!-- ========== LEVEL 4: CONSTELLATION OF LOVE ========== -->
+<section class="screen" id="screen-l4">
+  <div class="screen-bg" style="background-image:url('assets/images/backgrounds/red_rose.jpg')"></div>
   <div class="screen-overlay dark"></div>
 
   <div class="level-wrap">
-    <p class="kicker">Level 5 · Constellation of Love</p>
+    <p class="kicker">Level 4 · Constellation of Love</p>
     <h2 class="display-md">Connect our stars</h2>
     <p class="lede sm">tap the glowing stars in order — draw the shape of us ✦</p>
 
@@ -329,21 +320,30 @@
 
 <!-- ========== FINAL SURPRISE ========== -->
 <section class="screen surprise" id="screen-surprise">
-  <div class="screen-bg" style="background-image:url('https://images.unsplash.com/photo-1530177321613-c34e0a16cb6f?auto=format&fit=crop&w=1920&q=80')"></div>
+  <div class="screen-bg" style="background-image:url('assets/images/backgrounds/lotus.jpg')"></div>
   <div class="screen-overlay dark"></div>
 
   <!-- floating sparks behind everything -->
   <div class="surprise-sparks" id="surpriseSparks"></div>
 
-  <!-- STAGE 1: the parchment letter -->
-  <div class="surprise-stage" id="stageLetter">
+  <!-- STAGE 1: Video -->
+  <div class="surprise-stage" id="stageVideo">
+    <p class="kicker glow">A Special Birthday Video</p>
+    <div class="video-container" style="max-width: 800px; margin: 0 auto; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+      <video id="surpriseVideo" controls style="width: 100%; display: block;" src="assets/video/surprise.mp4"></video>
+    </div>
+    <button class="cta big" id="btnSeeLetter" style="margin-top: 2rem;"><span>Next Surprise ✿</span></button>
+  </div>
+
+  <!-- STAGE 2: the parchment letter -->
+  <div class="surprise-stage" id="stageLetter" hidden>
     <p class="kicker glow" id="surpriseHello">For you</p>
 
     <div class="scroll-wrap" id="scrollWrap">
       <div class="scroll-cap top"></div>
       <div class="parchment" id="parchment">
         <div class="wax-seal" id="waxSeal">♥</div>
-        <h1 class="letter-head">A Love Letter</h1>
+        <h1 class="letter-head">My letter</h1>
         <div class="letter-rule"></div>
         <p class="letter-body" id="letterText"></p>
         <p class="letter-sign" id="letterSign"></p>
@@ -354,7 +354,7 @@
     <button class="cta big" id="btnSeeMemories"><span>See our memories ✿</span></button>
   </div>
 
-  <!-- STAGE 2: the photo gallery -->
+  <!-- STAGE 3: the photo gallery -->
   <div class="surprise-stage" id="stagePhotos" hidden>
     <p class="kicker glow">Our little forever</p>
     <h2 class="display-md glow">Moments of <em>us</em></h2>

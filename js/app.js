@@ -6,21 +6,23 @@ const $ = (s, el=document) => el.querySelector(s);
 const $$ = (s, el=document) => Array.from(el.querySelectorAll(s));
 
 const state = {
-  current: 'screen-intro',
+  current: 'screen-password',
   name: '',
   completed: new Set(),
   quizAnswers: [],
   soundOn: false,
 };
 
-const TOTAL_LEVELS = 5;
+const TOTAL_LEVELS = 4;
 // Names she can type for Level 1 — edit these in assets/config.json (no need to touch this file).
 // These stay as the fallback defaults if config.json is missing or can't be loaded.
-let ALLOWED_NAMES = ['pichu','chuhuu','pie','chuhu','chuu','piee'];
-let LEVEL1_HINT = '💡 hint: starts with "p" or "ch"...';
+let SITE_PASSWORD = 'love';
+let ALLOWED_NAMES = ['cutie','mummy','pie','bujji','bangaram','konda'];
+let LEVEL1_HINT = '💡 hint: starts with "cu" or "ba"...';
 
 function applyConfig(cfg){
   if(!cfg) return;
+  if(cfg.password) SITE_PASSWORD = cfg.password;
   if(Array.isArray(cfg.allowedNames) && cfg.allowedNames.length){
     ALLOWED_NAMES = cfg.allowedNames.map(n => String(n).trim().toLowerCase()).filter(Boolean);
   }
@@ -59,19 +61,6 @@ const INSTRUCTIONS = {
     `
   },
   2: {
-    title: 'Memory Match',
-    body: `
-      <p>A flip-card matching game — every pair you find unlocks a memory of us ✿</p>
-      <ul>
-        <li>Tap any card to flip it and reveal its symbol</li>
-        <li>Tap a second card — if symbols match, they stay flipped</li>
-        <li>If they don't match, both flip back. Remember where they were!</li>
-        <li>Find all <strong>8 pairs</strong> to win</li>
-        <li>Try to finish in the fewest <strong>moves</strong> possible</li>
-      </ul>
-    `
-  },
-  3: {
     title: 'Photo Puzzle',
     body: `
       <p>A scrambled picture of us — drag every piece to its right spot ✿</p>
@@ -84,7 +73,7 @@ const INSTRUCTIONS = {
       </ul>
     `
   },
-  4: {
+  3: {
     title: 'Heart Rain',
     body: `
       <p>Catch the love falling from the sky — fill my heart all the way ♥</p>
@@ -96,7 +85,7 @@ const INSTRUCTIONS = {
       </ul>
     `
   },
-  5: {
+  4: {
     title: 'Constellation of Love',
     body: `
       <p>Connect the glowing stars in order to draw the shape of us ✦</p>
@@ -135,14 +124,19 @@ document.addEventListener('DOMContentLoaded', () => {
   if(btn) btn.addEventListener('click', hideInstructions);
 });
 
-const LOVE_LETTER = `My dearest [NAME],
+const LOVE_LETTER = `Happy Birthday to the most amazing person! 🎉
 
-I made all of this — the path, the games, the silly puzzles — for one reason. To say what I sometimes forget to say out loud.
+I created this little quest just for you, to show you how much you mean to me in a special way. 
 
-You are my favorite chapter of every day. The quiet ones, the loud ones, the ones where I forget my keys and you laugh at me anyway.
+You bring so much joy, light, and laughter into every single day. Your kindness, your beautiful smile, and your wonderful spirit make this world a better place. Every moment spent with you is a treasure, and I am so incredibly grateful to have you in my life. You have a heart of gold and a unique way of making everyone around you feel special.
 
-Thank you for being mine.
-I love you. Forever and a day. ✿`;
+I hope today brings you as much happiness as you give to everyone around you. May all your dreams come true and this year be filled with unforgettable memories. I can't wait to see what this next year brings for you, and I promise to be there cheering you on every step of the way. 
+
+Here's to celebrating you today and every day after. I hope your special day is full of beautiful surprises, endless joy, and all the things that make you smile. 
+
+Wishing you the happiest of birthdays, filled with all the love and chocolates you deserve!
+
+Love always. ✿`;
 
 /* ============== Sound (Howler) ============== */
 let bgm = null;
@@ -397,12 +391,30 @@ function goTo(id){
 
       // Hook into specific screens
       if(id === 'screen-map') onEnterMap();
-      if(id === 'screen-l2') initMemory();
-      if(id === 'screen-l3') initPuzzle();
-      if(id === 'screen-l5') initConstellation();
+      if(id === 'screen-l2') initPuzzle();
+      if(id === 'screen-l4') initConstellation();
       if(id === 'screen-surprise') triggerSurprise();
     }
   });
+}
+
+/* ============== Password → Intro → Name → Map ============== */
+const _btnPwd = $('#btnPasswordSubmit');
+const _inpPwd = $('#entryPassword');
+if(_btnPwd) _btnPwd.addEventListener('click', submitPassword);
+if(_inpPwd) _inpPwd.addEventListener('keypress', e => { if(e.key === 'Enter') submitPassword(); });
+
+function submitPassword(){
+  const v = $('#entryPassword').value.trim();
+  const err = $('#passwordError');
+  if(v === SITE_PASSWORD) {
+    err.textContent = '';
+    goTo('screen-intro');
+  } else {
+    playSfx('wrong');
+    err.textContent = 'Incorrect password';
+    gsap.fromTo('#entryPassword', { x: 0 }, { x: 8, duration: 0.06, repeat: 5, yoyo: true, ease: 'power1.inOut', onComplete: () => gsap.set('#entryPassword', {x:0}) });
+  }
 }
 
 /* ============== Intro → Name → Map ============== */
@@ -463,10 +475,9 @@ function onEnterMap(){
 // Bunny stops along the path matching her current level
 const BUNNY_POSITIONS = [
   { x: '10%', y: '80%' },  // start (level 1 not done)
-  { x: '28%', y: '53%' },  // after level 1 -> at level 2 stone
-  { x: '50%', y: '37%' },  // after level 2
-  { x: '72%', y: '47%' },  // after level 3
-  { x: '90%', y: '20%' },  // after level 4
+  { x: '40%', y: '53%' },  // after level 1 -> at level 2 stone
+  { x: '65%', y: '37%' },  // after level 2 -> at level 3 stone
+  { x: '85%', y: '20%' },  // after level 3 -> at level 4 stone
   { x: '95%', y: '12%' },  // all done — past the last stone
 ];
 function moveBunnyToProgress(){
@@ -618,100 +629,7 @@ function l1Check(){
   }
 }
 
-/* =========================================================
-   LEVEL 2 — Memory Match
-   ========================================================= */
-const MEMORY_SYMBOLS = ['♥','✿','★','☾','✦','♡','❀','✧'];
-let memoryDeck = [];
-let memoryFlipped = [];
-let memoryMatched = 0;
-let memoryMoves = 0;
-let memoryTimer = 0;
-let memoryInterval = null;
-let memoryLock = false;
 
-function initMemory(){
-  // Reset
-  memoryMatched = 0;
-  memoryMoves = 0;
-  memoryTimer = 0;
-  memoryFlipped = [];
-  memoryLock = false;
-  clearInterval(memoryInterval);
-  $('#l2Moves').textContent = '0';
-  $('#l2Pairs').textContent = '0';
-  $('#l2Time').textContent = '0:00';
-
-  // Build deck (8 pairs = 16 cards)
-  memoryDeck = [...MEMORY_SYMBOLS, ...MEMORY_SYMBOLS].sort(() => Math.random() - .5);
-
-  const grid = $('#memoryGrid');
-  grid.innerHTML = '';
-  memoryDeck.forEach((sym, idx) => {
-    const card = document.createElement('div');
-    card.className = 'mcard';
-    card.dataset.idx = idx;
-    card.dataset.sym = sym;
-    card.innerHTML = `
-      <div class="mcard-face mcard-back"></div>
-      <div class="mcard-face mcard-front">${sym}</div>
-    `;
-    card.addEventListener('click', () => flipCard(card));
-    grid.appendChild(card);
-  });
-
-  // Animate cards in (clearProps so flip transform isn't overridden)
-  gsap.from('.mcard',
-    { scale: 0, opacity: 0, duration: 0.5, stagger: { each: 0.04, from: 'random' }, ease: 'back.out(1.5)',
-      clearProps: 'all' }
-  );
-
-  // Start timer
-  memoryInterval = setInterval(() => {
-    memoryTimer++;
-    const m = Math.floor(memoryTimer/60), s = memoryTimer%60;
-    $('#l2Time').textContent = `${m}:${s.toString().padStart(2,'0')}`;
-  }, 1000);
-}
-
-function flipCard(card){
-  if(memoryLock) return;
-  if(card.classList.contains('flipped') || card.classList.contains('matched')) return;
-  card.classList.add('flipped');
-  playSfx('flip');
-  memoryFlipped.push(card);
-
-  if(memoryFlipped.length === 2){
-    memoryMoves++;
-    $('#l2Moves').textContent = memoryMoves;
-    memoryLock = true;
-    const [a,b] = memoryFlipped;
-    if(a.dataset.sym === b.dataset.sym){
-      // Match
-      setTimeout(() => {
-        a.classList.add('matched');
-        b.classList.add('matched');
-        memoryFlipped = [];
-        memoryLock = false;
-        memoryMatched++;
-        $('#l2Pairs').textContent = memoryMatched;
-        playSfx('sparkle');
-        if(memoryMatched === 8){
-          clearInterval(memoryInterval);
-          playSfx('correct');
-          setTimeout(() => completeLevel(2), 800);
-        }
-      }, 400);
-    } else {
-      setTimeout(() => {
-        a.classList.remove('flipped');
-        b.classList.remove('flipped');
-        memoryFlipped = [];
-        memoryLock = false;
-      }, 900);
-    }
-  }
-}
 
 /* =========================================================
    LEVEL 3 — SVG Jigsaw Puzzle (real tabs & notches)
@@ -731,19 +649,21 @@ let dragPiece = null;
 let dragOffset = { x:0, y:0 };
 let puzzleSvg = null;
 
-function loadPuzzleImage(){
-  return new Promise((resolve) => {
-    if(puzzleImage){ resolve(puzzleImage); return; }
-    const img = new Image();
-    img.crossOrigin = 'anonymous';
-    img.onload = () => { puzzleImage = img; resolve(img); };
-    img.onerror = () => {
-      const fb = new Image();
-      fb.onload = () => { puzzleImage = fb; resolve(fb); };
-      fb.src = makePuzzleDataURL();
-    };
-    img.src = 'assets/images/puzzle/puzzle.png';
-  });
+function loadPuzzleImage() {
+    return new Promise((resolve, reject) => {
+
+        puzzleImage = new Image();
+
+        puzzleImage.onload = () => resolve(puzzleImage);
+
+        puzzleImage.onerror = () => {
+            alert("Cannot load assets/images/puzzle/puzzle.jpg");
+            reject();
+        };
+
+        puzzleImage.src = "assets/images/puzzle/puzzle.jpg?v=" + Date.now();
+
+    });
 }
 
 /**
@@ -856,7 +776,7 @@ async function initPuzzle(){
       im.setAttribute('x', '0'); im.setAttribute('y', '0');
       im.setAttribute('width', `${PUZZLE_AREA}`);
       im.setAttribute('height', `${PUZZLE_AREA}`);
-      im.setAttribute('preserveAspectRatio', 'xMidYMid slice');
+      im.setAttribute('preserveAspectRatio', 'none');
       pattern.appendChild(im);
       defs.appendChild(pattern);
     }
@@ -1011,7 +931,7 @@ function endDrag(){
             colors: ['#ffd29c','#ff9ec4','#c8a8e8'],
           });
         }
-        setTimeout(() => completeLevel(3), 1200);
+        setTimeout(() => completeLevel(2), 1200);
       }
     }
   }
@@ -1048,8 +968,8 @@ function startRain(){
   updateHeartFill(0);
 
   // Update HUD target text
-  const headerEl = document.querySelector('#screen-l4 .display-md');
-  if(headerEl) headerEl.innerHTML = `Catch enough love<br/>to fill my heart`;
+  const headerEl = document.querySelector('#screen-l3 .display-md');
+  if(headerEl) headerEl.innerHTML = `Catch enough love<br/>to fill your heart with joy`;
 
   // Spawn first burst right away so she can start clicking
   for(let i=0; i<3; i++) setTimeout(spawnFalling, i*150);
@@ -1067,9 +987,18 @@ function spawnFalling(){
   const zone = $('#rainZone');
   // Only 12% chance for bad hearts (was 20%) — feels nicer
   const isBad = Math.random() < 0.12;
+  const isChoc = !isBad && Math.random() < 0.3;
   const h = document.createElement('button');
   h.className = 'fheart ' + (isBad ? 'bad' : 'good');
-  h.textContent = isBad ? '✗' : '♥';
+  if(isChoc) {
+    h.textContent = '🍫';
+    h.dataset.type = 'choc';
+  } else if (isBad) {
+    h.textContent = '✗';
+  } else {
+    h.textContent = '♥';
+    h.dataset.type = 'heart';
+  }
   // Random size variation for visual interest — but all are large
   const sizeClass = Math.random() < 0.3 ? 'huge' : (Math.random() < 0.5 ? 'big' : 'medium');
   h.classList.add(sizeClass);
@@ -1096,6 +1025,13 @@ function spawnFalling(){
       playSfx('heartCatch');
       rainScore++;
       $('#l4Score').textContent = rainScore;
+      
+      if(h.dataset.type === 'choc') {
+        $('#heartFillRect').setAttribute('fill', '#2d1b1b');
+      } else {
+        $('#heartFillRect').setAttribute('fill', 'url(#heartFill)');
+      }
+
       updateHeartFill(rainScore / RAIN_TARGET);
       // Burst tiny hearts on click position
       burstMiniHearts(e.clientX, e.clientY);
@@ -1148,7 +1084,7 @@ function endRain(won){
 
   if(won || rainScore >= RAIN_TARGET){
     playSfx('correct');
-    completeLevel(4);
+    completeLevel(3);
   } else {
     $('#btnL4Start').style.display = '';
     $('#btnL4Start').textContent = `Try again (${rainScore} ♥)`;
@@ -1302,7 +1238,7 @@ function finishConstellation(){
       colors: ['#ffd29c','#ff9ec4','#c8a8e8','#ff5a8a','#fbf6ef'],
     });
   }
-  setTimeout(() => completeLevel(5), 1500);
+  setTimeout(() => completeLevel(4), 1500);
 }
 
 const _l5Reset = $('#l5Reset');
@@ -1317,10 +1253,10 @@ const LETTER_SIGN = 'Forever & a day,\nyours ♥';
 
 const GALLERY = [
   { src: 'assets/images/memories/memory-1.JPG',  caption: 'where it all began ✿' },
-  { src: 'assets/images/memories/memory-2.JPG',  caption: 'just us ♥' },
-  { src: 'assets/images/memories/memory-3.jpeg', caption: 'that laugh of yours' },
-  { src: 'assets/images/memories/memory-4.jpeg', caption: 'my favorite view' },
-  { src: 'assets/images/memories/memory-5.jpeg', caption: 'every little moment' },
+  { src: 'assets/images/memories/memory-2.JPG',  caption: 'MY ♥ pic' },
+  { src: 'assets/images/memories/memory-3.jpeg', caption: 'wind stay with u' },
+  { src: 'assets/images/memories/memory-4.jpeg', caption: 'sun kiss' },
+  { src: 'assets/images/memories/memory-5.jpeg', caption: 'My name start with M' },
   { src: 'assets/images/memories/memory-6.jpeg', caption: 'forever to go ✦' },
 ];
 
@@ -1331,17 +1267,21 @@ function clearSurpriseTimers(){
 }
 
 function showSurpriseStage(which){
+  const video = $('#stageVideo');
   const letter = $('#stageLetter');
   const photos = $('#stagePhotos');
-  if(which === 'photos'){
-    letter.hidden = true;
-    photos.hidden = false;
+  if(video) video.hidden = (which !== 'video');
+  if(letter) letter.hidden = (which !== 'letter');
+  if(photos) photos.hidden = (which !== 'photos');
+
+  if(which === 'video'){
+    gsap.fromTo('#stageVideo > *', { y: 20, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.6, stagger: 0.08, ease: 'power3.out' });
+  } else if(which === 'photos'){
     initGallery();
     gsap.fromTo('#stagePhotos > *', { y: 28, opacity: 0 },
       { y: 0, opacity: 1, duration: 0.7, stagger: 0.1, ease: 'power3.out' });
-  } else {
-    photos.hidden = true;
-    letter.hidden = false;
+  } else if(which === 'letter'){
     gsap.fromTo('#stageLetter > *', { y: 20, opacity: 0 },
       { y: 0, opacity: 1, duration: 0.6, stagger: 0.08, ease: 'power3.out' });
   }
@@ -1369,7 +1309,7 @@ function startSparks(){
 
 function triggerSurprise(){
   clearSurpriseTimers();
-  showSurpriseStage('letter');
+  showSurpriseStage('video');
   $('#surpriseHello').textContent = `For you, ${state.name || 'love'}`;
   startSparks();
 
@@ -1390,7 +1330,9 @@ function triggerSurprise(){
     fire(0.1,  { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
     fire(0.1,  { spread: 120, startVelocity: 45 });
   }, 400);
+}
 
+function triggerLetterAnimation() {
   // unroll the scroll, pop the wax seal
   const parch = $('#parchment');
   parch.classList.remove('rolling');
@@ -1476,6 +1418,13 @@ function goGallery(i){
   }, 4200);
 }
 
+$('#btnSeeLetter').addEventListener('click', () => { 
+  playSfx('sparkle'); 
+  const video = $('#surpriseVideo');
+  if(video) video.pause();
+  showSurpriseStage('letter'); 
+  triggerLetterAnimation();
+});
 $('#btnSeeMemories').addEventListener('click', () => { playSfx('sparkle'); showSurpriseStage('photos'); });
 $('#btnBackToLetter').addEventListener('click', () => { playSfx('click'); showSurpriseStage('letter'); });
 $('#galPrev').addEventListener('click', () => goGallery(galIdx - 1));
@@ -1507,7 +1456,9 @@ function makePlaceholderDataURL(idx, label){
     ['#b48cc8','#ffdce6','#ffd29c'],
     ['#a078b4','#f0c8e6','#ff9ec4'],
   ];
+
   const p = palettes[(idx-1) % palettes.length];
+
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
     <defs>
       <linearGradient id="g${idx}" x1="0" y1="0" x2="1" y2="1">
@@ -1515,94 +1466,85 @@ function makePlaceholderDataURL(idx, label){
         <stop offset="0.6" stop-color="${p[1]}"/>
         <stop offset="1" stop-color="${p[2]}"/>
       </linearGradient>
-      <radialGradient id="b${idx}" cx="0.5" cy="0.6" r="0.6">
-        <stop offset="0" stop-color="rgba(255,255,255,0.4)"/>
-        <stop offset="1" stop-color="rgba(255,255,255,0)"/>
-      </radialGradient>
     </defs>
     <rect width="400" height="400" fill="url(#g${idx})"/>
-    <circle cx="200" cy="240" r="180" fill="url(#b${idx})"/>
-    <!-- Two stylized heads -->
-    <circle cx="155" cy="180" r="34" fill="rgba(255,255,255,0.85)"/>
-    <circle cx="245" cy="180" r="34" fill="rgba(255,255,255,0.85)"/>
-    <!-- Bodies -->
-    <path d="M 110 220 L 200 220 L 215 360 L 95 360 Z" fill="rgba(255,255,255,0.7)"/>
-    <path d="M 200 220 L 290 220 L 305 360 L 185 360 Z" fill="rgba(255,255,255,0.7)"/>
-    <!-- Heart between them -->
-    <path d="M 200 250 C 200 240, 180 230, 175 245 C 170 230, 150 240, 155 255 C 160 270, 200 290, 200 290 C 200 290, 240 270, 245 255 C 250 240, 230 230, 225 245 C 220 230, 200 240, 200 250 Z" fill="#ff5a8a" opacity="0.9"/>
-    <!-- Label -->
-    <text x="20" y="32" font-family="Inter,sans-serif" font-size="11" font-weight="600" letter-spacing="2" fill="rgba(255,255,255,0.9)">${label}</text>
-    <text x="20" y="385" font-family="Inter,sans-serif" font-size="10" fill="rgba(255,255,255,0.7)">replace with your photo</text>
+    <text x="20" y="380"
+      font-size="14"
+      fill="white">Replace with your image</text>
   </svg>`;
-  return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
+
+  return "data:image/svg+xml;utf8," + encodeURIComponent(svg);
 }
 
-function makePuzzleDataURL(){
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600">
-    <defs>
-      <linearGradient id="pg" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0" stop-color="#9b7fc7"/>
-        <stop offset="0.4" stop-color="#ff9ec4"/>
-        <stop offset="1" stop-color="#ffd29c"/>
-      </linearGradient>
-    </defs>
-    <rect width="600" height="600" fill="url(#pg)"/>
-    <circle cx="300" cy="380" r="280" fill="rgba(255,255,255,0.2)"/>
-    <!-- Two heads -->
-    <circle cx="220" cy="240" r="50" fill="rgba(255,255,255,0.92)"/>
-    <circle cx="380" cy="240" r="50" fill="rgba(255,255,255,0.92)"/>
-    <!-- Bodies -->
-    <path d="M 150 300 L 300 300 L 320 560 L 130 560 Z" fill="rgba(255,255,255,0.78)"/>
-    <path d="M 300 300 L 450 300 L 470 560 L 280 560 Z" fill="rgba(255,255,255,0.78)"/>
-    <!-- Big heart -->
-    <path d="M 300 350 C 300 335, 270 320, 260 340 C 250 320, 220 335, 230 360 C 245 395, 300 430, 300 430 C 300 430, 355 395, 370 360 C 380 335, 350 320, 340 340 C 330 320, 300 335, 300 350 Z" fill="#ff5a8a"/>
-    <text x="30" y="50" font-family="Inter,sans-serif" font-size="14" font-weight="700" letter-spacing="3" fill="rgba(255,255,255,0.95)">PUZZLE · YOU &amp; ME</text>
-  </svg>`;
-  return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
-}
+/* ===========================
+   PUZZLE IMAGE
+   =========================== */
 
 function installImageFallbacks(){
-  // Memory orbit photos
+
+  // Memory images
   $$('.orbit-photo img').forEach((img, i) => {
+
     const idx = i + 1;
-    img.addEventListener('error', () => {
+
+    img.onerror = () => {
       img.src = makePlaceholderDataURL(idx, `MEMORY · 0${idx}`);
-    });
-    // Trigger error if currently broken (cached failure)
+    };
+
     if(img.complete && img.naturalWidth === 0){
       img.src = makePlaceholderDataURL(idx, `MEMORY · 0${idx}`);
     }
+
   });
-  // Puzzle peek image
-  const peek = $('#puzzlePeekImg img');
+
+  // Puzzle Preview Image
+  const peek = document.querySelector("#puzzlePeekImg img");
+
   if(peek){
-    peek.addEventListener('error', () => { peek.src = makePuzzleDataURL(); });
-    if(peek.complete && peek.naturalWidth === 0){ peek.src = makePuzzleDataURL(); }
+
+      peek.src = "assets/images/puzzle/puzzle.jpg?v=" + Date.now();
+
+      peek.onerror = function(){
+          alert("Puzzle image not found.\n\nPlace image here:\nassets/images/puzzle/puzzle.jpg");
+      };
   }
-  // Puzzle tiles use background-image; test it with a hidden Image()
-  const testImg = new Image();
-  testImg.onerror = () => {
-    const fallbackBg = `url("${makePuzzleDataURL()}")`;
-    document.documentElement.style.setProperty('--puzzle-img', fallbackBg);
-    // Override CSS for .pp
-    const tag = document.createElement('style');
-    tag.textContent = `.pp{background-image:${fallbackBg} !important;}`;
-    document.head.appendChild(tag);
+
+  // Load puzzle image for puzzle pieces
+  puzzleImage = new Image();
+
+  puzzleImage.onload = function(){
+      console.log("Puzzle image loaded successfully.");
   };
-  testImg.src = 'assets/images/puzzle/puzzle.png';
+
+  puzzleImage.onerror = function(){
+      alert("Puzzle image missing.\n\nassets/images/puzzle/puzzle.jpg");
+  };
+
+  puzzleImage.src = "assets/images/puzzle/puzzle.jpg?v=" + Date.now();
 }
 
 if(state.name){
   $('#userName').value = state.name;
   $('#nameDisplay').textContent = state.name;
 }
-$('#soundToggle').classList.add('muted'); // start muted, auto-enables on first tap
 
-// Animate initial screen content
+$('#soundToggle').classList.add('muted');
+
+// Animate initial screen
 window.addEventListener('load', () => {
-  gsap.fromTo('.intro-wrap > *', 
-    { y: 30, opacity: 0 },
-    { y: 0, opacity: 1, duration: 0.8, stagger: 0.12, ease: 'power3.out' }
+
+  gsap.fromTo(
+    '.intro-wrap > *',
+    { y:30, opacity:0 },
+    {
+      y:0,
+      opacity:1,
+      duration:0.8,
+      stagger:0.12,
+      ease:'power3.out'
+    }
   );
+
   installImageFallbacks();
+
 });

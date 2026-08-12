@@ -1,4 +1,5 @@
 {
-  "allowedNames": ["",""],
-  "level1Hint": "💡 hint: starts with \"p\" or \"ch\"..."
+  "password": "love",
+  "allowedNames": ["manasa"],
+  "level1Hint": "💡 hint: starts with \"m\"..."
 }
